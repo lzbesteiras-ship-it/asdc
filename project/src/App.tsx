@@ -293,9 +293,31 @@ function BookingPage({ onBack }: { onBack: () => void }) {
     setStep('form');
   };
 
+  const validateName = (value: string) => /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ]+)+$/.test(value.trim());
+  const validatePhone = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    return digits.length === 10 || digits.length === 11;
+  };
+  const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(value.trim());
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDate || !selectedSlot) return;
+
+    if (!validateName(name)) {
+      setError('Digite seu nome completo (nome e sobrenome, só letras).');
+      return;
+    }
+    if (!validatePhone(phone)) {
+      setError('Digite um telefone válido com DDD (10 ou 11 dígitos).');
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError('Digite um e-mail válido.');
+      return;
+    }
+
+    setError(null);
     setStep('payment');
   };
 
